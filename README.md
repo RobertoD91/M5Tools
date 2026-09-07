@@ -20,6 +20,10 @@ The page is rebuilt by the Build workflow on every push to the default branch
 (or manually from the Actions tab). The same workflow builds both environments
 on every push and stores the images as artifacts of the run.
 
+One-time setup for a fork: in the repository settings open *Pages* and set
+*Build and deployment → Source* to *GitHub Actions*, otherwise the deploy job
+fails with "Get Pages site failed".
+
 # PlatformIO build
 
 ```
