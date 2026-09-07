@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M5Tools Web Flasher</title>
+<meta name="color-scheme" content="light dark">
+<style>
+  :root {
+    --bg: #f6f7f9; --fg: #1d2129; --muted: #5d6673; --card: #ffffff; --line: #d9dee5;
+    --accent: #0b6bcb; --code: #eef1f5; --ok: #1a7f37; --warn: #9a6700;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1216; --fg: #e6e9ee; --muted: #9aa4b2; --card: #171b21; --line: #2a313b;
+      --accent: #58a6ff; --code: #0b0e12; --ok: #3fb950; --warn: #d29922;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-size: 1.9rem; margin: 0 0 4px; }
+  h2 { font-size: 1.2rem; margin: 32px 0 12px; }
+  p { margin: 8px 0; }
+  a { color: var(--accent); }
+  .sub { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin-top: 16px; }
+  .install { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .install esp-web-install-button { --esp-tools-button-color: var(--accent); --esp-tools-button-text-color: #fff; }
+  /* Until the component script from the CDN has run, show one loading note instead of every slot fallback. */
+  esp-web-install-button:not(:defined) > [slot] { display: none; }
+  esp-web-install-button:not(:defined)::before { content: "Loading the flasher component from unpkg.com... if this text stays, the CDN is unreachable: use the manual images below."; color: var(--muted); }
+  .install .hint { color: var(--muted); font-size: 0.92rem; }
+  .warn { color: var(--warn); }
+  ol, ul { padding-left: 22px; }
+  li { margin: 4px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.88em; }
+  code { background: var(--code); padding: 1px 5px; border-radius: 4px; }
+  pre { background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; margin: 8px 0 0; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 0.88rem; }
+</style>
+<script type="module" src="https://unpkg.com/esp-web-tools@10.4.0/dist/web/install-button.js?module"></script>
+</head>
+<body>
+<main>
+  <h1>M5Tools Web Flasher</h1>
+  <p class="sub">Flash the <a href="{{REPO_URL}}">M5Tools</a> firmware onto an M5Stack Core2, Tough or ToughC5 straight from the browser. Nothing to install on the PC.</p>
+
+  <div class="card">
+    <div class="install">
+      <esp-web-install-button manifest="manifest.json">
+        <span slot="unsupported" class="warn">Your browser does not support Web Serial. Use Chrome, Edge or Opera on a desktop OS.</span>
+        <span slot="not-allowed" class="warn">Web Serial only works on HTTPS pages. Reload this page over HTTPS.</span>
+      </esp-web-install-button>
+      <span class="hint">The chip is detected automatically: an ESP32 gets the Core2 / Tough build, an ESP32-C5 gets the ToughC5 build.</span>
+    </div>
+    <ol>
+      <li>Connect the device to the PC with a USB data cable and switch it on.</li>
+      <li>Press <b>Connect</b>, pick the serial port of the device, then press <b>Install</b>.</li>
+      <li>Wait for the progress bar to finish. The device resets by itself into M5Tools.</li>
+    </ol>
+    <p class="sub">If the port does not show up: on Core2 / Tough the USB bridge is a CP210x, on ToughC5 it is the chip's native USB. If the connection fails, hold the power button until the screen turns off, then try again while the device is booting.</p>
+  </div>
+
+  <h2>Build</h2>
+  <div class="card">
+    <dl>
+      <dt>Branch</dt><dd><code>{{REF}}</code></dd>
+      <dt>Commit</dt><dd><a href="{{COMMIT_URL}}"><code>{{COMMIT_SHORT}}</code></a> {{COMMIT_TITLE}}</dd>
+      <dt>Built</dt><dd>{{BUILD_DATE}} by <a href="{{RUN_URL}}">workflow run #{{RUN_NUMBER}}</a></dd>
+    </dl>
+  </div>
+
+  <h2>Manual flashing</h2>
+  <p class="sub">The same images the button flashes, for <code>esptool</code> or any other tool. The merged image is the whole flash content from offset 0 and is the easiest one to use by hand.</p>
+{{BUILD_SECTIONS}}
+
+  <footer>
+    Powered by <a href="https://esphome.github.io/esp-web-tools/">ESP Web Tools</a>. Images are produced by the <a href="{{REPO_URL}}/actions/workflows/build.yml">Build workflow</a> of the repository.
+  </footer>
+</main>
+</body>
+</html>

@@ -1,3 +1,6 @@
 .pio/
 .vscode/
 *.log
+# output of scripts/make_site.py when run locally
+site/
+__pycache__/

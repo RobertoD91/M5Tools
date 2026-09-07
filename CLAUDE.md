@@ -21,6 +21,14 @@ There is no test suite and no linter; a clean build of both environments is the 
 is also supported by opening `src/src.ino` (the sketch folder is `src/`, which is why the sketch is named
 `src.ino` and the assets live under `src/src/`).
 
+`scripts/flash_images.py` runs after every build (`extra_scripts` in `platformio.ini`): it copies every
+image `-t upload` would flash into the build directory, writes `flash_images.json` with their offsets and
+merges them into `firmware_merged.bin` with `esptool merge-bin`. `.github/workflows/build.yml` builds both
+environments on every push (and on manual dispatch), uploads those files as artifacts, and on the default
+branch assembles the web flasher (`web/index.html` template + `scripts/make_site.py`, which writes the
+ESP Web Tools `manifest.json`) and deploys it to GitHub Pages. `make_site.py` can be run locally against
+`.pio/build` copies to check the page.
+
 `platformio.ini` pins one pioarduino platform release for every env on purpose: mixing platforms makes the
 envs fight over the framework directory, and newer arduino-core releases overflow IRAM on classic ESP32.
 M5Unified is pinned to a specific develop commit. Do not bump either without a reason recorded in the ini
