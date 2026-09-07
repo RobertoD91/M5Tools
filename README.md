@@ -6,12 +6,35 @@
  - PlatformIO espressif32 4.4.0 / Arduino for ESP32 2.0.3
  - PlatformIO pioarduino espressif32 / Arduino for ESP32 3.x for ESP32-C5
 
+# Web flasher
+
+[![Build](https://github.com/RobertoD91/M5Tools/actions/workflows/build.yml/badge.svg)](https://github.com/RobertoD91/M5Tools/actions/workflows/build.yml)
+
+The firmware can be flashed from a browser, without installing anything, at
+https://robertod91.github.io/M5Tools/ (Chrome, Edge or Opera on a desktop OS,
+which provide Web Serial). The page detects the chip and picks the Core2 /
+Tough or the ToughC5 build. It also offers the raw images and a merged image
+for `esptool`.
+
+The page is rebuilt by the Build workflow on every push to the default branch
+(or manually from the Actions tab). The same workflow builds both environments
+on every push and stores the images as artifacts of the run.
+
+One-time setup for a fork: in the repository settings open *Pages* and set
+*Build and deployment → Source* to *GitHub Actions*, otherwise the deploy job
+fails with "Get Pages site failed".
+
 # PlatformIO build
 
 ```
 pio run -e m5tools_core2_tough
 pio run -e m5tools_tough_c5
 ```
+
+Besides `firmware.bin`, each build leaves in `.pio/build/<env>/` every image
+that `pio run -t upload` would flash (bootloader, partition table, boot_app0),
+`firmware_merged.bin` with all of them merged from offset 0, and
+`flash_images.json` describing the layout.
 
 The `m5tools_core2_tough` environment uses the `m5stack-core2` board definition
 and builds the same firmware for M5Stack Core2 and M5Stack Tough.
